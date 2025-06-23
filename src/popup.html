@@ -1,0 +1,335 @@
+.help-link { color: #fff; text-decoration: underline; }
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Translator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 350px;
+            min-height: 500px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header h1 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .toggle-section {
+            margin-bottom: 25px;
+        }
+        
+        .toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .toggle-label {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .switch.active {
+            background: #4CAF50;
+        }
+        
+        .switch-handle {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .switch.active .switch-handle {
+            transform: translateX(26px);
+        }
+        
+        .groq-section {
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .groq-section h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .api-key-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 12px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .api-key-input:focus {
+            outline: 2px solid #4CAF50;
+        }
+        
+        .save-btn {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            background: #4CAF50;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .save-btn:hover {
+            background: #45a049;
+        }
+        
+        .language-section {
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .stats h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 11px;
+            opacity: 0.7;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        
+        .status.enabled {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+        
+        .status.disabled {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+        
+        .status.warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.5);
+        }
+        
+        .help-text {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+        
+        .manual-translator {
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .manual-translator h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .translator-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 12px;
+            margin-bottom: 10px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+        
+        .translator-input:focus {
+            outline: 2px solid #4CAF50;
+        }
+        
+        .translator-output {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 12px;
+            margin-bottom: 10px;
+            min-height: 60px;
+            font-family: inherit;
+            resize: none;
+        }
+        
+        .translate-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #FF8C42;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+        
+        .translate-btn:hover {
+            background: #ff7c32;
+        }
+        
+        .translate-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🤖 Telegram Translator AI</h1>
+        <p>Powered by Groq - Inglês → Português</p>
+    </div>
+
+    <div class="content">
+        <div class="toggle-section">
+            <div class="toggle">
+                <span class="toggle-label">Tradução Ativa</span>
+                <div class="switch" id="enableSwitch">
+                    <div class="switch-handle"></div>
+                </div>
+            </div>
+
+            <div class="status" id="status">
+                <span id="statusText">Configure sua API Key do Groq primeiro</span>
+            </div>
+        </div>
+
+        <div class="groq-section">
+            <h3>🔑 Configurar Groq API</h3>
+            <input type="password" id="groqApiKey" class="api-key-input" placeholder="Cole sua API Key do Groq aqui..." maxlength="200">
+            <button id="saveApiKey" class="save-btn">Salvar API Key</button>
+            <div class="help-text">
+                💡 Obtenha sua API Key gratuita em <a href="https://console.groq.com/keys" target="_blank" class="help-link">console.groq.com</a>
+            </div>
+        </div>
+
+        <div class="manual-translator">
+            <h3>🔄 Tradutor Manual</h3>
+            <textarea id="translatorInput" class="translator-input" placeholder="Digite em português para traduzir para inglês..." maxlength="500"></textarea>
+            <textarea id="translatorOutput" class="translator-output" placeholder="Tradução em inglês aparecerá aqui..." readonly></textarea>
+            <button id="translateBtn" class="translate-btn">🌐 Traduzir PT → EN</button>
+        </div>
+
+        <div class="language-section">
+            <div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                <h3>🤖 IA Generativa vs API Tradicional</h3>
+                <p style="font-size: 12px; opacity: 0.8; margin-top: 8px;">
+                    ✅ Traduções mais naturais e contextuais<br> ✅ Entende gírias e expressões<br> ✅ Processamento em lotes para eficiência<br> ✅ Cache inteligente
+                </p>
+            </div>
+        </div>
+
+        <div class="stats">
+            <h3>📊 Estatísticas</h3>
+            <div class="stat-item">
+                <span>Mensagens traduzidas:</span>
+                <span id="translatedCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span>Cache de traduções:</span>
+                <span id="cacheSize">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Feito com ❤️ e IA para facilitar sua comunicação
+    </div>
+
+    <script src="../dist/popup.js"></script>
+</body>
+
+</html>
