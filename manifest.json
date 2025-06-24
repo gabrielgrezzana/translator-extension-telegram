@@ -1,24 +1,22 @@
 {
-	"manifest_version": 3,
-	"name": "Telegram Translator",
-	"version": "1.0",
-	"description": "Traduz mensagens do Telegram automaticamente",
+    "manifest_version": 3,
+    "name": "Telegram Translator",
+    "version": "1.0",
+    "description": "Traduz mensagens do Telegram automaticamente",
 
-	"permissions": ["activeTab", "storage"],
+    "permissions": ["activeTab", "storage"],
 
-	"host_permissions": ["https://web.telegram.org/*", "https://api.mymemory.translated.net/*"],
+    "host_permissions": ["https://web.telegram.org/*", "https://api.mymemory.translated.net/*"],
 
-	"content_scripts": [
-		{
-			"matches": ["https://web.telegram.org/*"],
-			"js": ["dist/content.js"],
-			"css": ["src/styles.css"],
-			"run_at": "document_end"
-		}
-	],
+    "content_scripts": [{
+        "matches": ["https://web.telegram.org/*"],
+        "js": ["dist/content.js"],
+        "css": ["src/styles.css"],
+        "run_at": "document_end"
+    }],
 
-	"action": {
-		"default_popup": "src/popup.html",
-		"default_title": "Telegram Translator"
-	}
+    "action": {
+        "default_popup": "src/popup.html",
+        "default_title": "Telegram Translator"
+    }
 }

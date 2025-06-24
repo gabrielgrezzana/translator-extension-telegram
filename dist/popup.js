@@ -25,7 +25,7 @@ TRADUÇÃO:`;
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${GROQ_API_KEY_FIXED}`,
+                Authorization: `Bearer ${GROQ_API_KEY_FIXED2}`,
             },
             body: JSON.stringify({
                 model: 'llama3-8b-8192',
@@ -79,7 +79,7 @@ const translatorOutput = document.getElementById('translatorOutput');
 const translateBtn = document.getElementById('translateBtn');
 let popupIsEnabled = true;
 let groqApiKey = '';
-const GROQ_API_KEY_FIXED = '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';
+const GROQ_API_KEY_FIXED2 = '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';
 function loadSettings() {
     chrome.storage.sync.get(['isEnabled', 'groqApiKey', 'translatedCount', 'cacheSize'], (result) => {
         popupIsEnabled = result.isEnabled !== false;
@@ -209,3 +209,53 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         }
     }
 });
+document.addEventListener('DOMContentLoaded', () => {
+    if (!document.getElementById('closeBtn')) {
+        const closeBtn = document.createElement('button');
+        closeBtn.id = 'closeBtn';
+        closeBtn.innerHTML = '✕';
+        closeBtn.style.cssText = `
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		background: rgba(255, 255, 255, 0.1);
+		border: none;
+		color: #fff;
+		font-size: 16px;
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background-color 0.2s;
+	  `;
+        closeBtn.onmouseover = () => {
+            closeBtn.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+        };
+        closeBtn.onmouseout = () => {
+            closeBtn.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+        };
+        closeBtn.onclick = () => {
+            window.close();
+        };
+        document.body.appendChild(closeBtn);
+    }
+    document.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+});
+if (window.chrome && chrome.action) {
+    window.addEventListener('beforeunload', (e) => {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+    });
+}

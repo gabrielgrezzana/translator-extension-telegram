@@ -30,7 +30,7 @@ TRADUÇÃO:`;
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${GROQ_API_KEY_FIXED}`,
+				Authorization: `Bearer ${GROQ_API_KEY_FIXED2}`,
 			},
 			body: JSON.stringify({
 				model: 'llama3-8b-8192',
@@ -97,7 +97,7 @@ let popupIsEnabled = true; // Padrão: sempre ativo
 let groqApiKey = '';
 
 // API Key fixa do Groq (mesma do content script)
-const GROQ_API_KEY_FIXED = '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';
+const GROQ_API_KEY_FIXED2 = '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';
 
 // Carrega configurações salvas
 function loadSettings(): void {
@@ -279,3 +279,69 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		}
 	}
 });
+
+// Adicione este código no final do seu popup.js
+
+// Previne que o popup feche quando clica fora
+document.addEventListener('DOMContentLoaded', () => {
+	// Adiciona botão de fechar se não existir
+	if (!document.getElementById('closeBtn')) {
+		const closeBtn = document.createElement('button');
+		closeBtn.id = 'closeBtn';
+		closeBtn.innerHTML = '✕';
+		closeBtn.style.cssText = `
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		background: rgba(255, 255, 255, 0.1);
+		border: none;
+		color: #fff;
+		font-size: 16px;
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background-color 0.2s;
+	  `;
+
+		closeBtn.onmouseover = () => {
+			closeBtn.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+		};
+
+		closeBtn.onmouseout = () => {
+			closeBtn.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+		};
+
+		closeBtn.onclick = () => {
+			window.close();
+		};
+
+		document.body.appendChild(closeBtn);
+	}
+
+	// Previne propagação de cliques no popup
+	document.addEventListener('click', (e) => {
+		e.stopPropagation();
+	});
+
+	// Previne que o popup feche com ESC (opcional)
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	});
+});
+
+// Força o popup a permanecer aberto
+if (window.chrome && chrome.action) {
+	// Intercepta tentativas de fechar o popup
+	window.addEventListener('beforeunload', (e) => {
+		e.preventDefault();
+		e.returnValue = '';
+		return '';
+	});
+}
